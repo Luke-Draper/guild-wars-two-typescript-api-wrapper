@@ -1,0 +1,5 @@
+// Scripts
+while read line; do mkdir $line;done < gw2paths.txt;
+
+for dir in $(find * -type d);do name=$(basename $dir);touch "$dir"/"$name".ts; echo -e "export default class ${name^} {}" > "$dir"/"$name".ts; touch "$dir"/"$name".test.ts; echo -e "import ${name^} from './$name'\n/**\n * ${name^} test\n */\ndescribe('${name^} test', () => {\ntest('${name^} is instantiable', () => {\nexpect(new ${name^}()).toBeInstanceOf(${name^})})})" > "$dir"/"$name".test.ts;done;
+

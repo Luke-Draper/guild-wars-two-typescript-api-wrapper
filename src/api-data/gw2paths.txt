@@ -1,17 +1,3 @@
-// Scripts
-while read line
-do
-   mkdir $line
-done < testfile.txt
-
-
-for dir in $(find . -type d);
-  do
-    name=$(basename $dir);
-    touch "$dir"/"$name".ts;
-    touch "$dir"/"$name".test.ts;
-done; 
-
 ./account
 ./account/achievements
 ./account/bank
