@@ -1,4 +1,4 @@
-import DummyClass from '../src/guild-wars-two-typescript-api-wrapper'
+import DummyClass from './guild-wars-two-typescript-api-wrapper'
 
 /**
  * Dummy test
