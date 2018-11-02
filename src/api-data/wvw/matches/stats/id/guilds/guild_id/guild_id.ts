@@ -1,1 +1,1 @@
-export default class Guild_id {}
+export default class GuildId {}
