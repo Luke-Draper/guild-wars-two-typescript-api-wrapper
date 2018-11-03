@@ -1,15 +1,9 @@
-import APIData from "../api-data";
+import MockAPIData from "./api-data";
 import APIEndpoint from "../api-endpoint";
 
-export default class MockAPIEndpoint extends APIEndpoint {
-	parseEndpointData(data: object): APIData {
-		let apiData: APIData = {
-			data: data,
-			parseData: function(data: object): APIData {
-				this.data = data;
-				return this;
-			}
-		};
+export default class MockAPIEndpoint extends APIEndpoint<MockAPIData> {
+	parseEndpointData(data: object): MockAPIData {
+		let apiData: MockAPIData = new MockAPIData(data);
 		return apiData;
 	}
 	constructor(

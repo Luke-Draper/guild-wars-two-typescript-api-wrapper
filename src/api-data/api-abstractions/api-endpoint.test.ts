@@ -113,7 +113,7 @@ describe("APIEndpoint", () => {
 		let mock = new MockAPIEndpoint("/test", false);
 		return mock.setupEndpoint(false).then(result => {
 			expect(result).not.toEqual(undefined);
-			expect(result.data).toEqual({});
+			expect(result.rawData).toEqual({});
 		});
 	});
 
@@ -122,7 +122,7 @@ describe("APIEndpoint", () => {
 		let mock = new MockAPIEndpoint("/test", false);
 		return mock.setupEndpoint(true).then(result => {
 			expect(result).not.toEqual(undefined);
-			expect(result.data).toEqual({
+			expect(result.rawData).toEqual({
 				location: "test_endpoint"
 			});
 		});
@@ -132,7 +132,7 @@ describe("APIEndpoint", () => {
 		let mock = new MockAPIEndpoint("/test", false, { paramaters: [1, 2, 3] });
 		return mock.setupEndpoint(true).then(result => {
 			expect(result).not.toEqual(undefined);
-			expect(result.data).toEqual({
+			expect(result.rawData).toEqual({
 				location: "test_endpoint_with_params"
 			});
 		});
@@ -145,7 +145,7 @@ describe("APIEndpoint", () => {
 		});
 		return mock.setupEndpoint(true).then(result => {
 			expect(result).not.toEqual(undefined);
-			expect(result.data).toEqual({
+			expect(result.rawData).toEqual({
 				location: "test_endpoint_with_authorization"
 			});
 		});
