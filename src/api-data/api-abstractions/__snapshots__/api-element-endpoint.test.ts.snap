@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`APIElementEndpoint Error on set up without recieving proper id from request 1`] = `"Invalid Data input to APIElementData constructor"`;
+
+exports[`APIElementEndpoint Error on set up without sending a request or proper rawData 1`] = `"Invalid Data input to APIElementData constructor"`;
+
+exports[`APIElementEndpoint doesn't instantiate authenticated endpoint without authentication 1`] = `"Unable to access authenticated endpoint without an access token"`;

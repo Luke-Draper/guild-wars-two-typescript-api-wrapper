@@ -17,10 +17,4 @@ export default abstract class APIData {
 	constructor(rawData: object) {
 		this.rawData = rawData;
 	}
-	/**
-	 * Sets up the data with a new set of data from the endpoint.<br>
-	 * Mimics functionality of the constructor
-	 * @param rawData The raw data from the API endpoint
-	 */
-	abstract parseData(rawData: object): APIData;
 }

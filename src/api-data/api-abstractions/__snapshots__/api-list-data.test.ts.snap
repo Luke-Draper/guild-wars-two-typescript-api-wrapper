@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`APIListData throws error on incorrect information 1`] = `"Invalid Data input to APIListData constructor"`;
+
+exports[`APIListData throws error on incorrect information in array 1`] = `"Invalid Data input to APIListData constructor"`;
+
+exports[`APIListData throws error on no information 1`] = `"Invalid Data input to APIListData constructor"`;

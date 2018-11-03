@@ -7,9 +7,11 @@
  *
  * @requires ../../async/api-getter
  * @requires ./api-data
+ * @requires ./param-interface
  */
 import APIGetter from "../../async/api-getter";
 import APIData from "./api-data";
+import ParamInterface from "./param-interface";
 
 export default abstract class APIEndpoint<T extends APIData> {
 	/**
@@ -31,20 +33,20 @@ export default abstract class APIEndpoint<T extends APIData> {
 	 * <em>pathFromRoot</em> = "/items"<br>
 	 * <em>params</em> = { ids: [1, 2, 3] }<br>
 	 */
-	params: object;
+	params: ParamInterface;
 	/**
 	 * The raw JSON data accessed at this endpoint from pathFromRoot<br>
 	 */
 	rawData: object;
 	/**
-	 * parsedDataComplete is false until parsedData has completed parsing<br>
-	 * If false then parsedData is undefined
+	 * dataObjectParsingComplete is false until dataObject has completed parsing<br>
+	 * If false then dataObject is undefined
 	 */
-	parsedDataComplete: boolean;
+	dataObjectParsingComplete: boolean;
 	/**
 	 * The parsed JSON data accessed at this endpoint from pathFromRoot<br>
 	 */
-	parsedData: T | undefined;
+	dataObject: T | undefined;
 	/**
 	 * Construct an API Endpoint
 	 * @param pathFromRoot
@@ -52,7 +54,7 @@ export default abstract class APIEndpoint<T extends APIData> {
 	 * @param params
 	 * assigned to this.pathFromRoot
 	 * @param rawData
-	 * assigned to this.data<br>
+	 * assigned to this.rawData<br>
 	 * overwritten by this.requestEndpoint() and this.setupEndpoint(true)
 	 * @throws Error("Unable to access authenticated endpoint without an access token")<br>
 	 * If attempting to access an authenticated endpoint without authentication
@@ -60,7 +62,7 @@ export default abstract class APIEndpoint<T extends APIData> {
 	constructor(
 		pathFromRoot: string,
 		isAuthenticated: boolean,
-		params: object = {},
+		params: ParamInterface = {},
 		rawData: object = {}
 	) {
 		this.pathFromRoot = pathFromRoot;
@@ -72,26 +74,26 @@ export default abstract class APIEndpoint<T extends APIData> {
 			);
 		}
 		this.rawData = rawData;
-		this.parsedData = undefined;
-		this.parsedDataComplete = false;
+		this.dataObject = undefined;
+		this.dataObjectParsingComplete = false;
 	}
 	/**
-	 * This function is called in setupEndpoint and takes raw json from this.data<br>
-	 * creates an object that implements APIData which parses the data
-	 * @param data
-	 * Raw JSON. setupEndpoint uses this.data
+	 * This function is called in setupEndpoint and takes raw json from this.rawData<br>
+	 * creates an object that implements APIData which parses the raw data
+	 * @param rawData
+	 * Raw JSON. setupEndpoint uses this.rawData<br>
+	 * Should throw an error if the raw data is invalid
 	 */
-	abstract parseEndpointData(data: object): T;
+	abstract parseEndpointData(rawData: object): T;
 	/**
-	 * Request the data from pathFromRoot using params and set its response equal to data<br>
-	 * If an error occurs then the promise is returned without altering the data
+	 * Request the raw data from pathFromRoot using params and set its response equal to this.rawData<br>
+	 * If an error occurs then the promise is returned without altering this.rawData
 	 * @return
 	 * The Promise of the request which makes requestEndpoint().then(()=>{}) syntax possible
 	 */
 	requestEndpoint(): Promise<object> {
 		return APIGetter.getRequestPathFromRoot(this.pathFromRoot, this.params)
 			.then(response => {
-				this.rawData = response.data;
 				return response.data;
 			})
 			.catch(error => {
@@ -100,7 +102,7 @@ export default abstract class APIEndpoint<T extends APIData> {
 			});
 	}
 	/**
-	 * Parse the data object and run any setup code required
+	 * Parse the rawData object and run any setup code required
 	 * @param request
 	 * if true then run this.requestEndpoint()
 	 * @return
@@ -108,16 +110,17 @@ export default abstract class APIEndpoint<T extends APIData> {
 	 */
 	setupEndpoint(request: boolean): Promise<T> {
 		if (request) {
-			return this.requestEndpoint().then(data => {
-				this.parsedDataComplete = true;
-				this.parsedData = this.parseEndpointData(this.rawData);
-				return this.parsedData;
+			return this.requestEndpoint().then(result => {
+				this.rawData = result;
+				this.dataObject = this.parseEndpointData(this.rawData);
+				this.dataObjectParsingComplete = true;
+				return this.dataObject;
 			});
 		} else {
-			this.parsedDataComplete = true;
-			this.parsedData = this.parseEndpointData(this.rawData);
+			this.dataObject = this.parseEndpointData(this.rawData);
+			this.dataObjectParsingComplete = true;
 			return new Promise((resolve, reject) => {
-				resolve(this.parsedData);
+				resolve(this.dataObject);
 			});
 		}
 	}

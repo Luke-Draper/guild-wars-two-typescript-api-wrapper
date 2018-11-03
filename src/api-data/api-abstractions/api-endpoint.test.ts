@@ -74,40 +74,6 @@ describe("APIEndpoint", () => {
 		});
 	});
 
-	it("sends a request to the proper endpoint", () => {
-		expect.assertions(2);
-		let mock = new MockAPIEndpoint("/test", false);
-		return mock.requestEndpoint().then(result => {
-			expect(result).not.toEqual(undefined);
-			expect(result).toEqual({
-				location: "test_endpoint"
-			});
-		});
-	});
-	it("sends a request to the proper endpoint with paramaters", () => {
-		expect.assertions(2);
-		let mock = new MockAPIEndpoint("/test", false, { paramaters: [1, 2, 3] });
-		return mock.requestEndpoint().then(result => {
-			expect(result).not.toEqual(undefined);
-			expect(result).toEqual({
-				location: "test_endpoint_with_params"
-			});
-		});
-	});
-	it("sends a request to the proper endpoint with authorization", () => {
-		expect.assertions(2);
-		let mock = new MockAPIEndpoint("/test", true, {
-			access_token: "test_token",
-			paramaters: [1, 2, 3]
-		});
-		return mock.requestEndpoint().then(result => {
-			expect(result).not.toEqual(undefined);
-			expect(result).toEqual({
-				location: "test_endpoint_with_authorization"
-			});
-		});
-	});
-
 	it("sets up without sending a request", () => {
 		expect.assertions(2);
 		let mock = new MockAPIEndpoint("/test", false);
