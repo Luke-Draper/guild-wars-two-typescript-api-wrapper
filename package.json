@@ -26,7 +26,7 @@
 		"test": "jest",
 		"test:watch": "jest --watch",
 		"test:watchAll": "jest --watchAll",
-		"test:prod": "npm run lint && npm run test -- --no-cache",
+		"test:prod": "npm run lint && npm run test -- --coverage --no-cache",
 		"deploy-docs": "ts-node tools/gh-pages-publish",
 		"report-coverage": "cat ./coverage/lcov.info | coveralls",
 		"commit": "git-cz",
@@ -51,7 +51,7 @@
 			".(ts|tsx)": "<rootDir>/node_modules/ts-jest/preprocessor.js"
 		},
 		"testEnvironment": "node",
-		"testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
+		"testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx)$",
 		"moduleFileExtensions": [
 			"ts",
 			"tsx",
