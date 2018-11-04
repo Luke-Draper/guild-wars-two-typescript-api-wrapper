@@ -176,18 +176,26 @@ export abstract class APISortedListDataInterface<
 	abstract setupDataStructure(): APISortedListDataInterface<Element>;
 }
 
-export abstract class APIDataParentInterface<
+export abstract class APINodeParentInterface<
 	Child extends APIDataInterface
-> extends APIDataInterface {
-	abstract children: Child[];
-	abstract setupChildren(children?: Child[]): void;
+> extends APINodeInterface {
+	children: Child[];
+	abstract addChild(child: Child): APINodeParentInterface<Child>;
+	constructor(
+		pathExtension: string,
+		rawData: object,
+		children: Child[] = new Array<Child>()
+	) {
+		super(pathExtension, rawData);
+		this.children = children;
+	}
 	/**
 	 * This function should be called once all of the data from the API has been stored.<br>
 	 * It should link this data structure with the rest of the data structures
 	 * @returns
 	 * Should return this
 	 */
-	abstract setupDataStructure(): APIDataParentInterface<Child>;
+	abstract setupDataStructure(): APINodeParentInterface<Child>;
 }
 
 export abstract class APIDataPointFromInterface extends APIDataInterface {

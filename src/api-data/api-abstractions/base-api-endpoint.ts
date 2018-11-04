@@ -32,11 +32,11 @@ export default class BaseAPIEndpoint<Data extends APIDataInterface> {
 	isAuthenticated: boolean;
 
 	dataConstructor: (
-		parent: APINodeInterface,
 		pathExtension: string,
-		rawData: object
+		rawData: object,
+		parent?: APINodeInterface
 	) => Data;
-	parent: APINodeInterface;
+	parent?: APINodeInterface;
 	/**
 	 * The paramaters to access this endpoint from pathExtension<br>
 	 * @example <br><br>
@@ -71,13 +71,13 @@ export default class BaseAPIEndpoint<Data extends APIDataInterface> {
 		sendRequest: boolean,
 		isAuthenticated: boolean,
 		dataConstructor: (
-			parent: APINodeInterface,
 			pathExtension: string,
-			rawData: object
+			rawData: object,
+			parent?: APINodeInterface
 		) => Data,
-		parent: APINodeInterface,
 		params: KeyValueInterface = {},
-		rawData: object = {}
+		rawData: object = {},
+		parent?: APINodeInterface
 	) {
 		this.sendRequest = sendRequest;
 		this.pathExtension = pathExtension;
@@ -114,7 +114,7 @@ export default class BaseAPIEndpoint<Data extends APIDataInterface> {
 					resolve(this.rawData);
 			  })
 		).then(data => {
-			return this.dataConstructor(this.parent, this.pathExtension, data);
+			return this.dataConstructor(this.pathExtension, data);
 		});
 	}
 	/**
