@@ -1,0 +1,5 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`APIGetter test getFromNode authenticated without token 1`] = `[Error: Attempting to access an authenticated endpoint "[object Object]" without authentication in APIGetter.setupParameters]`;
+
+exports[`APIGetter test getFromNode disabled 1`] = `[Error: Attempting to access a disabled endpoint "[object Object]" without authentication in APIGetter.setupParameters]`;

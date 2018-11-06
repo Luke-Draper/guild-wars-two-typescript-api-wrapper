@@ -59,6 +59,7 @@
 		],
 		"coveragePathIgnorePatterns": [
 			"/node_modules/",
+			"/__mock__/",
 			"/test/"
 		],
 		"coverageThreshold": {

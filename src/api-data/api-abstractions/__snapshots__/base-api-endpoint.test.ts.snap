@@ -1,3 +1,0 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
-
-exports[`APIEndpoint doesn't instantiate authenticated endpoint without authentication 1`] = `"Unable to access authenticated endpoint without an access token"`;

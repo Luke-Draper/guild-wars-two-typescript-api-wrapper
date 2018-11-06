@@ -2,7 +2,7 @@ import {
 	APIDataInterface,
 	APINodeParentInterface
 } from "../api-abstractions/api-data-interface";
-import KeyValueInterface from "../api-abstractions/key-val-interface";
+import KeyValueInterface from "../api-abstractions/key-value-interface";
 
 export default class Root extends APINodeParentInterface<APIDataInterface> {
 	setupDataStructure(): Root {
