@@ -80,7 +80,7 @@ export function defaultNodeSetupData(
 		? new Promise(resolve => {
 				resolve(inputThis.data);
 		  })
-		: APIGetter.getFromNode(inputThis)
+		: APIGetter.getFromNode(inputThis, {})
 	).then(returnedData => {
 		inputThis.data = returnedData;
 		let childSetup = new Array<Promise<IAPIChild>>();

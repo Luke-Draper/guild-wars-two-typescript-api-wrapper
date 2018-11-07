@@ -68,13 +68,13 @@ export function defaultListSetupData(
 		? new Promise(resolve => {
 				resolve(inputThis.data);
 		  })
-		: APIGetter.getFromNode(inputThis)
+		: APIGetter.getFromNode(inputThis, {})
 	).then(returnedData => {
 		inputThis.data = returnedData;
 		let childSetup = new Array<Promise<IAPIChild>>();
 		let elementSet: Promise<Array<IAPIElement>> | undefined = undefined;
 		if (recursive) {
-			elementSet = APIGetter.getAllFromList(inputThis, elementSetup);
+			elementSet = APIGetter.getAllFromList(inputThis, elementSetup, {});
 			if (inputThis.children !== undefined && inputThis.children.length > 0) {
 				inputThis.children.forEach((child: IAPIChild) => {
 					childSetup.push(child.setupData(recursive, useCurrentData));

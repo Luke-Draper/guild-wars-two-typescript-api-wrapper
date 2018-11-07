@@ -53,7 +53,7 @@ export default class APIGetter {
 	 */
 	static setupParameters(
 		node: IAPINode,
-		inputParameters: KeyValueInterface = {}
+		inputParameters: KeyValueInterface
 	): KeyValueInterface {
 		let params = inputParameters;
 		if (node.isDisabled) {
@@ -82,14 +82,14 @@ export default class APIGetter {
 	 */
 	static getFromNode(
 		node: IAPINode,
-		inputParameters: KeyValueInterface = {}
+		inputParameters: KeyValueInterface
 	): Promise<object> {
 		let fullPath = node.getFullPath();
 		let params = APIGetter.setupParameters(node, inputParameters);
 		return APIGetter.getRequest(fullPath, params).then(response => {
 			let output = response;
-			if (typeof (response as any).data === "object") {
-				output = (response as any).data;
+			if (typeof (response as KeyValueInterface).data === "object") {
+				output = (response as KeyValueInterface).data;
 			}
 			return output;
 		});
@@ -106,26 +106,25 @@ export default class APIGetter {
 			parentNode: IAPIList,
 			rawData: object
 		) => Promise<IAPIElement>,
-		inputParameters: KeyValueInterface = {}
+		inputParameters: KeyValueInterface
 	): Promise<Array<IAPIElement>> {
 		let outPromise = undefined;
+		console.log(1);
 		if (list.idsGetWithAllAvailable) {
-			inputParameters.ids = "all";
-			outPromise = APIGetter.getAllFromListWithPagination(
-				list,
-				inputParameters
-			);
+			console.log(2);
+			outPromise = APIGetter.getAllFromListWithAll(list, inputParameters);
 		} else {
-			inputParameters.page_size = APIGetter.MAX_PAGE_SIZE;
-			inputParameters.page = 0;
+			console.log(3);
 			outPromise = APIGetter.getAllFromListWithPagination(
 				list,
 				inputParameters
 			);
 		}
 		return outPromise.then(array => {
+			console.log(array);
 			let output = new Array<Promise<IAPIElement>>();
 			array.forEach(elementData => {
+				console.log(5);
 				output.push(elementSetup(list, elementData));
 			});
 			return Promise.all(output);
@@ -138,10 +137,12 @@ export default class APIGetter {
 	 */
 	static getAllFromListWithAll(
 		list: IAPIList,
-		inputParameters: KeyValueInterface = {}
+		inputParameters: KeyValueInterface
 	): Promise<Array<object>> {
-		return new Promise(() => {
-			return APIGetter.getFromNode(list, inputParameters);
+		inputParameters.ids = "all";
+		console.log(list.getFullPath(), inputParameters);
+		return APIGetter.getFromNode(list, inputParameters).then(response => {
+			return response as Array<object>;
 		});
 	}
 	/**
@@ -151,8 +152,10 @@ export default class APIGetter {
 	 */
 	static getAllFromListWithPagination(
 		list: IAPIList,
-		inputParameters: KeyValueInterface = {}
+		inputParameters: KeyValueInterface
 	): Promise<Array<object>> {
+		inputParameters.page_size = APIGetter.MAX_PAGE_SIZE;
+		inputParameters.page = 0;
 		let promises = new Array<Promise<Array<object>>>();
 		for (
 			let i = 0;
@@ -160,15 +163,23 @@ export default class APIGetter {
 			i++
 		) {
 			inputParameters.page = i;
-			promises.push(APIGetter.getFromNode(list, inputParameters) as Promise<
-				Array<object>
-			>);
+			console.log(list.getFullPath(), inputParameters);
+			promises.push(
+				APIGetter.getFromNode(list, inputParameters).then(response => {
+					console.log(response);
+					return response as Array<object>;
+				})
+			);
 		}
 		return Promise.all(promises).then(arrays => {
-			let output = new Array<object>();
-			for (let j = 0; j < arrays.length; j++) {
-				output.concat(arrays[j]);
+			console.log(arrays, arrays.length);
+			let output = arrays[0];
+			if (arrays.length > 1) {
+				for (let j = 1; j < arrays.length; j++) {
+					output.push.apply(output, arrays[j]);
+				}
 			}
+			console.log(output);
 			return output;
 		});
 	}
