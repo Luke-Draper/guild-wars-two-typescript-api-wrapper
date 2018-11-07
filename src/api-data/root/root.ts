@@ -1,4 +1,4 @@
-import {
+/*import {
 	APIDataInterface,
 	APINodeParentInterface
 } from "../api-abstractions/api-data-interface";
@@ -288,3 +288,4 @@ export function getApiStructure(
 	}
 	return step3;
 }
+*/

@@ -6,9 +6,25 @@ import IAPIReferencing from "./iapi-referencing";
  * other data points of the API
  */
 export default interface IAPIReferenced extends IAPINode {
+	/**
+	 * The nodes that this node is referenced by
+	 */
 	referencingNodes: Array<IAPIReferencing>;
+	/**
+	 * function called to add a referencing node to this. Calls addReferenceTo if needed on the referencing node. returns this
+	 * @param referencingNode the node referencing this
+	 */
 	addReferenceFrom(referencingNode: IAPIReferencing): IAPIReferenced;
-	setupData(useRawData: boolean): Promise<IAPIReferenced>;
+	/**
+	 * Sets up the data from this endpoint. This should be handled on a case by case basis as adding references is data structure specific.
+	 * @param recursive Whether to run the get request to obtain this data or use the current data object
+	 * @param recursive Whether to run the get request to obtain this data or use the current data object
+	 * @return A promise holding this after completing data parsing
+	 */
+	setupData(
+		recursive: boolean,
+		useCurrentData: boolean
+	): Promise<IAPIReferenced>;
 }
 
 /**
@@ -20,7 +36,22 @@ export function isAPIReferenced(object: object): object is IAPIReferenced {
 		isAPINode(object) &&
 		(object as any).referencingNodes !== undefined &&
 		(object as any).addReferenceFrom !== undefined &&
-		(object as any).getReferencingNodeByPath !== undefined &&
 		(object as any).setupData !== undefined
 	);
+}
+
+/**
+ * A default implementation of IAPIReferenced.addReferenceFrom
+ */
+export function defaultAddReferenceFrom(
+	inputThis: IAPIReferenced,
+	referencingNode: IAPIReferencing
+): IAPIReferenced {
+	if (!inputThis.referencingNodes.includes(referencingNode)) {
+		inputThis.referencingNodes.push(referencingNode);
+	}
+	if (!referencingNode.referencedNodes.includes(inputThis)) {
+		referencingNode.addReferenceTo(inputThis);
+	}
+	return inputThis;
 }
